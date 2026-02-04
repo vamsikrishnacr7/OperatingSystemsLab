@@ -58,8 +58,20 @@ Add:
 	j 	$31
 	.end Add
 
-	.globl Exit
-	.ent	Exit
+	.globl Abs
+	.ent	Abs
+
+Abs:
+    addiu $2, $0, SC_Abs
+    syscall
+    j $31
+    .end Abs
+    
+    .global Exit
+    .ent Exit
+
+
+
 Exit:
 	addiu $2,$0,SC_Exit
 	syscall

@@ -48,6 +48,7 @@
 #define SC_Wait 52
 #define SC_Signal 53
 #define SC_GetPid 54
+#define SC_Abs 55
 
 #ifndef IN_ASM
 
@@ -69,7 +70,7 @@ void Halt();
  */
 
 int Add(int op1, int op2);
-
+int Abs(int op);
 int ReadNum();
 
 void PrintNum(int num);
