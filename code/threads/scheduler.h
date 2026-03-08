@@ -13,6 +13,16 @@
 #include "list.h"
 #include "thread.h"
 
+
+// The following class defined is used for storing the thread that is sleeping and the time at which the thread has to be woken up.
+
+class SleepingThread {
+    public:
+        SleepingThread(Thread* thread, int time);
+        Thread* sleptThread;
+        int whenToWake;
+};
+
 // The following class defines the scheduler/dispatcher abstraction --
 // the data structures and operations needed to keep track of which
 // thread is running, and which threads are ready but not running.
@@ -33,10 +43,19 @@ class Scheduler {
     void Print();               // Print contents of ready list
 
     // SelfTest for scheduler is implemented in class Thread
+    
+    // check if the blockedList is empty -- Might be required in future
+
+    bool isBlockedListEmpty();
+    // Function for pushing a new thread into blockedList
+    void pushIntoBlockedList(Thread* thread, int time);
+    // Function for checking if there is any thread that needs to be woken up from the blocked list.
+    bool checkBlockedList(int currentTime, bool advanceTime);
 
    private:
-    List<Thread*>* readyList;  // queue of threads that are ready to run,
+    SortedList<Thread*>* readyList;  // queue of threads that are ready to run,
                                // but not running
+    List<SleepingThread*>* blockedList; // queue for threads that in blocked state and are needed to be woken up
     Thread* toBeDestroyed;     // finishing thread to be destroyed
                                // by the next thread that runs
 };
