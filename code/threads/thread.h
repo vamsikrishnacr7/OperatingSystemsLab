@@ -78,6 +78,7 @@ class Thread {
     int *stackTop;                         // the current stack pointer
     void *machineState[MachineStateSize];  // all registers except for stackTop
     bool has_dynamic_name;  // true if the thread name is dynamically allocated
+    int priority;
 
    public:
     Thread(char *debugName,
@@ -110,6 +111,8 @@ class Thread {
     char *getName() { return (name); }
     void Print() { cout << name; }
     void SelfTest();  // test whether thread impl is working
+    int getPriority();
+    void setPriority(int p);
 
    private:
     // some of the private data for this class is listed above

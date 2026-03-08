@@ -21,6 +21,7 @@
 #include "switch.h"
 #include "synch.h"
 #include "sysdep.h"
+#include <cstdlib>
 
 // this is put at the top of the execution stack, for detecting stack overflows
 const int STACK_FENCEPOST = 0xdedbeef;
@@ -39,6 +40,8 @@ Thread::Thread(char *threadName, bool _has_dynamic_name /*=false*/) {
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
+    priority = rand() % 10;
+
     for (int i = 0; i < MachineStateSize; i++) {
         machineState[i] = NULL;  // not strictly necessary, since
                                  // new thread ignores contents
@@ -199,10 +202,10 @@ void Thread::Yield() {
     ASSERT(this == kernel->currentThread);
 
     DEBUG(dbgThread, "Yielding thread: " << name);
-
+    
+    kernel->scheduler->ReadyToRun(this);
     nextThread = kernel->scheduler->FindNextToRun();
     if (nextThread != NULL) {
-        kernel->scheduler->ReadyToRun(this);
         kernel->scheduler->Run(nextThread, FALSE);
     }
     (void)kernel->interrupt->SetLevel(oldLevel);
@@ -243,6 +246,9 @@ void Thread::Sleep(bool finishing) {
     // returns when it's time for us to run
     kernel->scheduler->Run(nextThread, finishing);
 }
+
+int Thread::getPriority(){return priority;}
+void Thread::setPriority(int p){priority = p;}
 
 //----------------------------------------------------------------------
 // ThreadBegin, ThreadFinish,  ThreadPrint

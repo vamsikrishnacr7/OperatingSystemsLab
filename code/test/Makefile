@@ -112,7 +112,7 @@ ifeq ($(hosttype),unknown)
 PROGRAMS = unknownhost
 else
 # change this if you create a new test program!
-PROGRAMS = add abs halt shell matmult sort segments test_syscall num_io char_io random str_io ascii bubblesort help create_file open_file readwrite exec test_sem sinhvien voinuoc main
+PROGRAMS = add abs childprog parent pachild up halt shell matmult sort segments test_syscall num_io char_io random str_io ascii bubblesort help create_file open_file readwrite exec test_sem sinhvien voinuoc main
 endif
 
 all: $(PROGRAMS)
@@ -140,6 +140,37 @@ abs.o: abs.c
 abs: abs.o start.o
 	$(LD) $(LDFLAGS) start.o abs.o -o abs.coff
 	$(COFF2NOFF) abs.coff abs
+
+pachild.o: pachild.c
+	$(CC) $(CFLAGS) -c pachild.c
+
+pachild: pachild.o start.o
+	$(LD) $(LDFLAGS) start.o pachild.o -o pachild.coff
+	$(COFF2NOFF) pachild.coff pachild
+
+
+childprog.o: childprog.c
+	$(CC) $(CFLAGS) -c childprog.c
+
+childprog: childprog.o start.o
+	$(LD) $(LDFLAGS) start.o childprog.o -o childprog.coff
+	$(COFF2NOFF) childprog.coff childprog
+
+
+parent.o: parent.c
+	$(CC) $(CFLAGS) -c parent.c
+
+parent: parent.o start.o
+	$(LD) $(LDFLAGS) start.o parent.o -o parent.coff
+	$(COFF2NOFF) parent.coff parent
+
+
+up.o: up.c
+	$(CC) $(CFLAGS) -c up.c
+
+up: up.o start.o
+	$(LD) $(LDFLAGS) start.o up.o -o up.coff
+	$(COFF2NOFF) up.coff up
 
 shell.o: shell.c
 	$(CC) $(CFLAGS) -c shell.c

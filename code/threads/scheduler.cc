@@ -29,8 +29,16 @@
 //	Initially, no ready threads.
 //----------------------------------------------------------------------
 
+int ThreadPriorityCompare(Thread *t1, Thread *t2){
+    if(t1->getPriority() > t2->getPriority())
+        return -1;
+    else if(t1->getPriority() < t2->getPriority())
+        return 1;
+    else return 0;
+}
+
 Scheduler::Scheduler() {
-    readyList = new List<Thread *>;
+    readyList = new SortedList<Thread *>(ThreadPriorityCompare);
     toBeDestroyed = NULL;
 }
 
