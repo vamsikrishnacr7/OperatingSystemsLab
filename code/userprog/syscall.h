@@ -49,6 +49,7 @@
 #define SC_Signal 53
 #define SC_GetPid 54
 #define SC_Abs 55
+#define SC_Sleep2 56
 
 #ifndef IN_ASM
 
@@ -182,6 +183,7 @@ int CreateSemaphore(char *name, int semval);
 int Wait(char *name);
 
 int Signal(char *name);
+void Sleep2(int time);
 
 /* User-level thread operations: Fork and Yield.  To allow multiple
  * threads to run within a user program.

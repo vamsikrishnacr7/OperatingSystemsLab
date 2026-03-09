@@ -67,10 +67,18 @@ Abs:
     j $31
     .end Abs
     
+    .global Sleep2
+    .ent Sleep2
+
+
+Sleep2:
+    addiu $2, $0, SC_Sleep2
+    syscall
+    j $31
+    .end Sleep2
+    
     .global Exit
     .ent Exit
-
-
 
 Exit:
 	addiu $2,$0,SC_Exit

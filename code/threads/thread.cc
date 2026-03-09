@@ -40,7 +40,8 @@ Thread::Thread(char *threadName, bool _has_dynamic_name /*=false*/) {
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
-    priority = rand() % 10;
+    priority = rand() % 10 + 1;
+    cout<<"Created thread:"<<name<<" with priority:"<<priority<<endl;
 
     for (int i = 0; i < MachineStateSize; i++) {
         machineState[i] = NULL;  // not strictly necessary, since

@@ -55,7 +55,7 @@ int ThreadPriorityCompare(Thread *t1, Thread *t2){
 }
 
 Scheduler::Scheduler() {
-    readyList = new SortedList<Thread *>(ThreadPriorityCompare);
+    readyList = new SortedList<Thread *>(&ThreadPriorityCompare);
     blockedList = new List<SleepingThread*>;
     toBeDestroyed = NULL;
 }
@@ -84,7 +84,7 @@ void Scheduler::pushIntoBlockedList(Thread* thread, int time){
         kernel->interrupt->Idle();
     }
     this->Run(nextThread, FALSE);
-    readyList->Remove(thread);
+    //readyList->Remove(thread);
     kernel->interrupt->SetLevel(oldLevel);
 }
 // Scheduler::checkBlockedList
@@ -95,23 +95,20 @@ bool Scheduler::checkBlockedList(int currentTime, bool advanceTime){
         kernel->stats->totalTicks += 1;
         //cout<<"Advancing the clock"<<endl;
     }
-    //cout<<"calling check inside blocked list"<<endl;
+    //cout<<"Calling check inside blocked list"<<endl;
     ListElement<SleepingThread*> *ptr;
     bool someThreadWoken = false;
 
     for(ptr = blockedList->first; ptr != NULL; ptr = ptr->next){
-        cout<<"Thread to wake up at:"<<ptr->item->whenToWake<<"while current is at:"<<kernel->stats->totalTicks<<endl;
+        cout<<"Thread to wake up at:"<<ptr->item->whenToWake<<" while current is at: "<<kernel->stats->totalTicks<<endl;
         volatile int currentTicks = kernel->stats->totalTicks;
 
         if(ptr->item->whenToWake <= currentTicks){
             SleepingThread* toBeWoken = ptr->item;
             blockedList->Remove(toBeWoken);
             readyList->Insert(toBeWoken->sleptThread);
-            toBeWoken->sleptThread->setStatus(READY);
-            //cout<<"Woken up a thread with name: << toBeWoken->sleptThread->getName()<<endl;
             someThreadWoken = true;
         }
-            
     }
 
     return someThreadWoken;
@@ -137,7 +134,7 @@ void Scheduler::ReadyToRun(Thread *thread) {
     DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
 
     thread->setStatus(READY);
-    readyList->Append(thread);
+    readyList->Insert(thread);
 }
 
 //----------------------------------------------------------------------

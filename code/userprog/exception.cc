@@ -170,6 +170,13 @@ void handle_SC_Abs() {
     return move_program_counter();
 }
 
+void handle_SC_Sleep2(){
+    int timeReq = (int)kernel->machine->ReadRegister(4);
+    SysSleep2(timeReq);
+    return move_program_counter();
+}
+
+
 void handle_SC_ReadNum() {
     int result = SysReadNum();
     kernel->machine->WriteRegister(2, result);
@@ -479,6 +486,8 @@ void ExceptionHandler(ExceptionType which) {
                     return handle_SC_Signal();
                 case SC_GetPid:
                     return handle_SC_GetPid();
+                case SC_Sleep2:
+                    return handle_SC_Sleep2();
                 /**
                  * Handle all not implemented syscalls
                  * If you want to write a new handler for syscall:

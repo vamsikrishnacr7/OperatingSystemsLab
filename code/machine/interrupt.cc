@@ -158,6 +158,14 @@ void Interrupt::OneTick() {
                                  // (interrupt handlers run with
                                  // interrupts disabled)
     CheckIfDue(FALSE);           // check for pending interrupts
+    bool someThreadWoken = kernel->scheduler->checkBlockedList(kernel->stats->totalTicks, false);
+    if(someThreadWoken){
+        cout<<"Yes !! Found a thread woken when running:"
+            <<kernel->currentThread->getName() << endl;
+        status = SystemMode;
+        kernel->currentThread->Yield();
+        status = oldStatus;
+    }
     ChangeLevel(IntOff, IntOn);  // re-enable interrupts
     if (yieldOnReturn) {         // if the timer device handler asked
                                  // for a context switch, ok to do it now
