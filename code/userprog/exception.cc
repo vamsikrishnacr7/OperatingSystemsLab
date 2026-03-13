@@ -176,6 +176,14 @@ void handle_SC_Sleep2(){
     return move_program_counter();
 }
 
+void handle_PageFault(){
+    int badAddr = kernel->machine->ReadRegister(BadVAddrReg);
+    cout<< "Page FAULT at virtual address: "<< badAddr << endl;
+    int vpn = badAddr / PageSize;
+    cout << "Faulting VPN: "<< vpn << endl;
+    kernel->currentThread->space->HandlePageFault(badAddr);
+}
+
 
 void handle_SC_ReadNum() {
     int result = SysReadNum();
@@ -428,6 +436,7 @@ void ExceptionHandler(ExceptionType which) {
             DEBUG(dbgSys, "Switch to system mode\n");
             break;
         case PageFaultException:
+            return handle_PageFault();
         case ReadOnlyException:
         case BusErrorException:
         case AddressErrorException:
